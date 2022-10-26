@@ -20,5 +20,7 @@
     "commander": "^9.4.1"
   },
   "type": "module",
-  "gendiff": "gendiff.js"
+  "bin": {
+    "gendiff": "gendiff.js"
+    }
 }
