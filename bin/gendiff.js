@@ -9,22 +9,18 @@ program
   .option("-V, --version", "output the version number 1")
   .option("-h, --help", "display help for command 1");
 
-// program.parse(process.argv);
+program.parse(process.argv);
 
-// const options = program.opts();
-// if (options.version) console.log(`${options.version}`);
-// if (options.help) console.log(`${options.help}`);
+const options = program.opts();
+if (options.version) console.log(`${options.version}`);
+if (options.help) console.log(`${options.help}`);
 
+// program.command('gendiff')
+// .action((str, options) => {
+//   const limit = options.help ? 1 : undefined;
+//   console.log(str.split(options.version, limit));
+// });
 
-
-program.command('gendiff')
-// .option("-V, --version", "output the version number")
-// .option("-h, --help", "display help for command")
-.action((str, options) => {
-  const limit = options.help ? 1 : undefined;
-  console.log(str.split(options.version, limit));
-});
-
-program.parse();
+// program.parse();
 
 console.log("DONE!");
