@@ -17,4 +17,4 @@ program
 
 program.parse(process.argv);
 
-console.log('DONE!');
+// console.log('DONE!');

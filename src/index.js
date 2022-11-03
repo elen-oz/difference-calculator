@@ -21,14 +21,14 @@ export default (filepath1, filepath2) => {
   const keys = _.sortBy(_.union(keys1, keys2));
   // console.log("keys: ", keys);
 
-  const getInfoDiff = (data1, data2, keys) => {
+  const getInfoDiff = (obj1, obj2, keys) => {
     const result = {};
     for (const key of keys) {
-      if (!_.has(data1, key)) {
+      if (!_.has(obj1, key)) {
         result[key] = 'added';
-      } else if (!_.has(data2, key)) {
+      } else if (!_.has(obj2, key)) {
         result[key] = 'deleted';
-      } else if (data1[key] !== data2[key]) {
+      } else if (obj1[key] !== obj2[key]) {
         result[key] = 'changed';
       } else {
         result[key] = 'unchanged';
@@ -38,5 +38,20 @@ export default (filepath1, filepath2) => {
     return result;
   };
 
-  console.log(getInfoDiff(data1, data2, keys));
+  const genDiff = (obj1, obj2, keys) => {
+    const infoDiff = getInfoDiff(data1, data2, keys);
+    const result = ``;
+
+    console.log(infoDiff);
+
+    // switch () {
+
+    // }
+
+    return infoDiff;
+  };
+
+  console.log('---1', getInfoDiff(data1, data2, keys));
+
+  console.log('===2', genDiff(data1, data2, keys));
 };
