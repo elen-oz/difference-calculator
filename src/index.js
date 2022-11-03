@@ -27,11 +27,16 @@ export default (filepath1, filepath2) => {
 
       if (!_.has(obj1, key)) {
         return { key, type: 'added', value: value1 };
-      } if (!_.has(obj2, key)) {
+      }
+      if (!_.has(obj2, key)) {
         return { key, type: 'deleted', value: value1 };
-      } if (obj1[key] !== obj2[key]) {
+      }
+      if (obj1[key] !== obj2[key]) {
         return {
-          key, type: 'changed', value1, value2,
+          key,
+          type: 'changed',
+          value1,
+          value2,
         };
       }
       return { key, type: 'unchanged', value: value1 };
@@ -66,5 +71,6 @@ export default (filepath1, filepath2) => {
 
   // console.log('---1', getInfoDiff(data1, data2, keys));
 
-  console.log('===2', genDiff(data1, data2, keys));
+  console.log('===', genDiff(data1, data2, keys));
+  // console.log(`--- проверка строки: \n вторая строка`);
 };
