@@ -22,14 +22,19 @@ export default (filepath1, filepath2) => {
 
   const getInfoDiff = (obj1, obj2, keys) => {
     const result = keys.map((key) => {
+      const value1 = obj1[key];
+      const value2 = obj2[key];
+
       if (!_.has(obj1, key)) {
-        return { key, type: 'added' };
+        return { key, type: 'added', value: value1 };
       } if (!_.has(obj2, key)) {
-        return { key, type: 'deleted' };
+        return { key, type: 'deleted', value: value1 };
       } if (obj1[key] !== obj2[key]) {
-        return { key, type: 'changed' };
+        return {
+          key, type: 'changed', value1, value2,
+        };
       }
-      return { key, type: 'unchanged' };
+      return { key, type: 'unchanged', value: value1 };
     });
 
     return result;
@@ -44,18 +49,18 @@ export default (filepath1, filepath2) => {
       const typeDiff = diff.type;
       switch (typeDiff) {
         case 'added':
-          return ` + ${diff.key}`;
+          return ` + ${diff.key}: ${diff.value}`;
         case 'deleted':
-          return ` - ${diff.key}`;
+          return ` - ${diff.key}: ${diff.value}`;
         case 'changed':
-          return ` - ${diff.key} \n + ${diff.key}`;
+          return ` - ${diff.key}: ${diff.value} \n + ${diff.key}: ${diff.value}`;
         case 'unchanged':
-          return ` ${diff.key}`;
+          return `   ${diff.key}: ${diff.value}`;
         default:
           return null;
       }
     });
-    
+
     return result;
   };
 
