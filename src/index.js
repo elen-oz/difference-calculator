@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /* eslint-disable no-restricted-syntax */
-import { readFileSync } from "node:fs";
-import path from "path";
-import { cwd } from "process";
-import _ from "lodash";
+import { readFileSync } from 'node:fs';
+import path from 'path';
+import { cwd } from 'process';
+import _ from 'lodash';
 
 export default (filepath1, filepath2) => {
   filepath1 = path.resolve(cwd(), filepath1).trim();
   filepath2 = path.resolve(cwd(), filepath2).trim();
 
-  const fileData1 = readFileSync(filepath1, "utf8");
-  const fileData2 = readFileSync(filepath2, "utf8");
+  const fileData1 = readFileSync(filepath1, 'utf8');
+  const fileData2 = readFileSync(filepath2, 'utf8');
 
   const data1 = JSON.parse(fileData1);
   const data2 = JSON.parse(fileData2);
@@ -25,13 +25,13 @@ export default (filepath1, filepath2) => {
     const result = {};
     for (const key of keys) {
       if (!_.has(data1, key)) {
-        result[key] = "added";
+        result[key] = 'added';
       } else if (!_.has(data2, key)) {
-        result[key] = "deleted";
+        result[key] = 'deleted';
       } else if (data1[key] !== data2[key]) {
-        result[key] = "changed";
+        result[key] = 'changed';
       } else {
-        result[key] = "unchanged";
+        result[key] = 'unchanged';
       }
     }
 
