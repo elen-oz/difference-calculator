@@ -47,30 +47,33 @@ export default (filepath1, filepath2) => {
 
   const genDiff = (obj1, obj2, keys) => {
     const infoDiff = getInfoDiff(data1, data2, keys);
-    // const result = '';
 
-    // console.log(infoDiff);
     const result = infoDiff.map((diff) => {
       const typeDiff = diff.type;
+      let result = '';
+
       switch (typeDiff) {
         case 'added':
-          return ` + ${diff.key}: ${diff.value}`;
+          result += ` + ${diff.key}: ${diff.value}\n`;
+          break;
         case 'deleted':
-          return ` - ${diff.key}: ${diff.value}`;
+          result += ` - ${diff.key}: ${diff.value}\n`;
+          break;
         case 'changed':
-          return ` - ${diff.key}: ${diff.value} \n + ${diff.key}: ${diff.value}`;
+          result += ` - ${diff.key}: ${diff.value} \n  + ${diff.key}: ${diff.value}\n`;
+          break;
         case 'unchanged':
-          return `   ${diff.key}: ${diff.value}`;
+          result += `   ${diff.key}: ${diff.value}\n`;
+          break;
         default:
-          return null;
+          result = null;
       }
+      return result;
     });
 
-    return result;
+    return `{\n ${result} \n}`;
   };
 
-  // console.log('---1', getInfoDiff(data1, data2, keys));
-
-  console.log('===', genDiff(data1, data2, keys));
-  // console.log(`--- проверка строки: \n вторая строка`);
+  // console.log('---ТИП', typeof genDiff(data1, data2, keys));
+  console.log(genDiff(data1, data2, keys));
 };
