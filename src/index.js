@@ -22,27 +22,47 @@ export default (filepath1, filepath2) => {
   // console.log("keys: ", keys);
 
   const getInfoDiff = (obj1, obj2, keys) => {
-    const result = {};
-    for (const key of keys) {
+    // const result = {};
+    // for (const key of keys) {
+    const result = keys.map((key) => {
       if (!_.has(obj1, key)) {
-        result[key] = 'added';
-      } else if (!_.has(obj2, key)) {
-        result[key] = 'deleted';
-      } else if (obj1[key] !== obj2[key]) {
-        result[key] = 'changed';
+        return { key, type: 'added' };
+        // result.key = key;
+        // result.type = 'added';
+
+        console.log("key: ", key);
+      } if (!_.has(obj2, key)) {
+        return { key, type: 'deleted' };
+        // result.key = key;
+        // result.type = 'deleted';
+
+        console.log("key: ", key);
+      } if (obj1[key] !== obj2[key]) {
+        return { key, type: 'changed' };
+        // result.key = key;
+        // result.type = 'changed';
+
+        console.log("key: ", key);
       } else {
-        result[key] = 'unchanged';
+        return { key, type: 'unchanged' };
+      // result.key = key;
+      // result.type = 'unchanged';
       }
-    }
+    });
+      
+      
 
     return result;
-  };
+    }
+
+    
+  // };
 
   const genDiff = (obj1, obj2, keys) => {
     const infoDiff = getInfoDiff(data1, data2, keys);
-    const result = ``;
+    const result = '';
 
-    console.log(infoDiff);
+    // console.log(infoDiff);
 
     // switch () {
 
@@ -51,7 +71,7 @@ export default (filepath1, filepath2) => {
     return infoDiff;
   };
 
-  console.log('---1', getInfoDiff(data1, data2, keys));
+  // console.log('---1', getInfoDiff(data1, data2, keys));
 
   console.log('===2', genDiff(data1, data2, keys));
 };
