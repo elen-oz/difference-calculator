@@ -6,11 +6,11 @@ import { cwd } from 'process';
 import _ from 'lodash';
 
 export default (filepath1, filepath2) => {
-  filepath1 = path.resolve(cwd(), filepath1).trim();
-  filepath2 = path.resolve(cwd(), filepath2).trim();
+  const fileFullPath1 = path.resolve(cwd(), filepath1).trim();
+  const fileFullPath2 = path.resolve(cwd(), filepath2).trim();
 
-  const fileData1 = readFileSync(filepath1, 'utf8');
-  const fileData2 = readFileSync(filepath2, 'utf8');
+  const fileData1 = readFileSync(fileFullPath1, 'utf8');
+  const fileData2 = readFileSync(fileFullPath2, 'utf8');
 
   const data1 = JSON.parse(fileData1);
   const data2 = JSON.parse(fileData2);
@@ -18,7 +18,7 @@ export default (filepath1, filepath2) => {
   const keys1 = _.keys(data1);
   const keys2 = _.keys(data2);
 
-  const keys = _.sortBy(_.union(keys1, keys2));
+  const sortedKeys = _.sortBy(_.union(keys1, keys2));
 
   const getInfoDiff = (obj1, obj2, keys) => {
     const result = keys.map((key) => {
@@ -48,7 +48,7 @@ export default (filepath1, filepath2) => {
   const genDiff = (obj1, obj2, keys) => {
     const infoDiff = getInfoDiff(data1, data2, keys);
 
-    const result = infoDiff.map((diff) => {
+    const getResult = infoDiff.map((diff) => {
       const typeDiff = diff.type;
       let result = '';
 
@@ -71,9 +71,9 @@ export default (filepath1, filepath2) => {
       return result;
     });
 
-    return `{\n ${result} \n}`;
+    return `{\n ${getResult} \n}`;
   };
 
   // console.log('---ТИП', typeof genDiff(data1, data2, keys));
-  console.log(genDiff(data1, data2, keys));
+  console.log(genDiff(data1, data2, sortedKeys));
 };
