@@ -50,25 +50,19 @@ export default (filepath1, filepath2) => {
 
     const getResult = infoDiff.map((diff) => {
       const typeDiff = diff.type;
-      let result = '';
 
       switch (typeDiff) {
         case 'added':
-          result += ` + ${diff.key}: ${diff.value}\n`;
-          break;
+          return ` + ${diff.key}: ${diff.value}\n`;
         case 'deleted':
-          result += ` - ${diff.key}: ${diff.value}\n`;
-          break;
+          return ` - ${diff.key}: ${diff.value}\n`;
         case 'changed':
-          result += ` - ${diff.key}: ${diff.value} \n  + ${diff.key}: ${diff.value}\n`;
-          break;
+          return ` - ${diff.key}: ${diff.value} \n  + ${diff.key}: ${diff.value}\n`;
         case 'unchanged':
-          result += `   ${diff.key}: ${diff.value}\n`;
-          break;
+          return `   ${diff.key}: ${diff.value}\n`;
         default:
-          result = null;
+          return null;
       }
-      return result;
     });
 
     return getResult;
