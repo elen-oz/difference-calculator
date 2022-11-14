@@ -71,9 +71,9 @@ export default (filepath1, filepath2) => {
       return result;
     });
 
-    return `{\n ${getResult} \n}`;
+    return getResult;
   };
 
   // console.log('---ТИП', typeof genDiff(data1, data2, keys));
-  console.log(genDiff(data1, data2, sortedKeys));
+  return genDiff(data1, data2, sortedKeys);
 };
