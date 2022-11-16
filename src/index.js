@@ -26,7 +26,7 @@ export default (filepath1, filepath2) => {
       const value2 = obj2[key];
 
       if (!_.has(obj1, key)) {
-        return { key, type: 'added', value: value1 };
+        return { key, type: 'added', value: value2 };
       }
       if (!_.has(obj2, key)) {
         return { key, type: 'deleted', value: value1 };
@@ -41,25 +41,27 @@ export default (filepath1, filepath2) => {
       }
       return { key, type: 'unchanged', value: value1 };
     });
-
+    console.log('--- getInfoDiff: ', result);
     return result;
   };
 
   const genDiff = (obj1, obj2, keys) => {
-    const infoDiff = getInfoDiff(data1, data2, keys);
+    const infoDiff = getInfoDiff(obj1, obj2, keys);
 
     const getResult = infoDiff.map((diff) => {
       const typeDiff = diff.type;
 
       switch (typeDiff) {
         case 'added':
-          return ` + ${diff.key}: ${diff.value}\n`;
+          return { key: diff.value };
         case 'deleted':
-          return ` - ${diff.key}: ${diff.value}\n`;
+          return { key: diff.value };
         case 'changed':
-          return ` - ${diff.key}: ${diff.value} \n  + ${diff.key}: ${diff.value}\n`;
+          return (
+            { key: diff.value1 },
+            { key: diff.value2 });
         case 'unchanged':
-          return `   ${diff.key}: ${diff.value}\n`;
+          return { key: diff.value };
         default:
           return null;
       }
@@ -69,5 +71,6 @@ export default (filepath1, filepath2) => {
   };
 
   // console.log('---ТИП', typeof genDiff(data1, data2, keys));
+  console.log('>>> RESULT', genDiff(data1, data2, sortedKeys));
   return genDiff(data1, data2, sortedKeys);
 };
