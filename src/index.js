@@ -15,13 +15,15 @@ export default (filepath1, filepath2) => {
   const data1 = JSON.parse(fileData1);
   const data2 = JSON.parse(fileData2);
 
-  const keys1 = _.keys(data1);
-  const keys2 = _.keys(data2);
+  const getInfoDiff = (obj1, obj2) => {
+    const keys1 = _.keys(data1);
+    const keys2 = _.keys(data2);
+    const sortedKeys = _.sortBy(_.union(keys1, keys2));
+    const sortedKeys1 = _.sortBy(_.union([...keys1, ...keys2]));
 
-  const sortedKeys = _.sortBy(_.union(keys1, keys2));
+    console.log(`>>>>> Без .../ С ... ${sortedKeys}/${sortedKeys1}`);
 
-  const getInfoDiff = (obj1, obj2, keys) => {
-    const result = keys.map((key) => {
+    const result = sortedKeys.map((key) => {
       const value1 = obj1[key];
       const value2 = obj2[key];
 
@@ -32,12 +34,7 @@ export default (filepath1, filepath2) => {
         return { key, type: 'deleted', value: value1 };
       }
       if (obj1[key] !== obj2[key]) {
-        return {
-          key,
-          type: 'changed',
-          value1,
-          value2,
-        };
+        return { key, type: 'changed', value: getInfoDiff(value1, value2) };
       }
       return { key, type: 'unchanged', value: value1 };
     });
@@ -45,8 +42,37 @@ export default (filepath1, filepath2) => {
     return result;
   };
 
-  const genDiff = (obj1, obj2, keys) => {
-    const infoDiff = getInfoDiff(obj1, obj2, keys);
+  const stringify = (value, replacer = ' ', spacesCount = 1) => {
+    const iter = (currentValue, depth) => {
+      if (typeof currentValue !== 'object' || currentValue === null) {
+        return String(currentValue);
+      }
+      const indentSize = depth * spacesCount;
+      const currentIndent = replacer.repeat(indentSize); // signSpace
+      const bracketIndent = replacer.repeat(indentSize - spacesCount);
+
+      const arrayValue = Object.entries(currentValue);
+      const lines = arrayValue.map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`);
+      const result = [
+        '{',
+        ...lines,
+        `${bracketIndent}}`,
+      ].join('\n');
+
+      return result;
+    };
+
+    return iter(value, 1);
+  };
+
+  const signes = {
+    plus: '+',
+    minus: '-',
+    nothing: ' ',
+  }
+
+  const genDiff = (obj1, obj2) => {
+    const infoDiff = getInfoDiff(obj1, obj2); // result
 
     const getResult = infoDiff.map((diff) => {
       const typeDiff = diff.type;
@@ -71,6 +97,6 @@ export default (filepath1, filepath2) => {
   };
 
   // console.log('---ТИП', typeof genDiff(data1, data2, keys));
-  console.log('>>> RESULT', genDiff(data1, data2, sortedKeys));
-  return genDiff(data1, data2, sortedKeys);
+  console.log('>>> RESULT', genDiff(data1, data2));
+  return genDiff(data1, data2);
 };

@@ -46,6 +46,17 @@ const cases = [
   ['...', undefined, 5],
 ];
 
+const test = [
+  { follow: false, type: 'deleted' },
+  { host: 'hexlet.io', type: 'unchanged' },
+  { proxy: '123.234.53.22', type: 'deleted' },
+  [
+    { timeout: 50, type: 'changed' },
+    { timeout: 20, type: 'changed' }
+  ],
+  { verbose: true, type: 'added' }
+];
+
 const stringify = (value, replacer = ' ', spacesCount = 1) => {
   const iter = (currentValue, depth) => {
     if (typeof currentValue !== 'object' || currentValue === null) {
@@ -56,7 +67,9 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
     const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
     const arrayValue = Object.entries(currentValue);
+    console.log('--- arrayValue: ', arrayValue);
     const lines = arrayValue.map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`);
+    console.log('=== lines: ', lines);
     const result = [
       '{',
       ...lines,
@@ -71,8 +84,10 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
 
 // primitives, nested, cases
 
-console.log('primitives: ', stringify(primitives, '--'));
-console.log('--------------');
-console.log('nested: ', stringify(nested, '+'));
-console.log('=================');
-console.log('cases: ', stringify(cases, '...'));
+// console.log('primitives: ', stringify(primitives));
+// console.log('--------------');
+// console.log('nested: ', stringify(nested));
+// console.log('=================');
+// console.log('cases: ', stringify(cases));
+// console.log('///');
+console.log('test: ', stringify(test));
