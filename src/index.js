@@ -19,9 +19,6 @@ export default (filepath1, filepath2) => {
     const keys1 = _.keys(data1);
     const keys2 = _.keys(data2);
     const sortedKeys = _.sortBy(_.union(keys1, keys2));
-    const sortedKeys1 = _.sortBy(_.union([...keys1, ...keys2]));
-
-    console.log(`>>>>> Без .../ С ... ${sortedKeys}/${sortedKeys1}`);
 
     const result = sortedKeys.map((key) => {
       const value1 = obj1[key];
@@ -38,26 +35,22 @@ export default (filepath1, filepath2) => {
       }
       return { key, type: 'unchanged', value: value1 };
     });
-    console.log('--- getInfoDiff: ', result);
     return result;
   };
 
-  const stringify = (value, replacer = ' ', spacesCount = 1) => {
+  const stringify = (value, spacesCount) => {
+    const space = ' ';
     const iter = (currentValue, depth) => {
       if (typeof currentValue !== 'object' || currentValue === null) {
         return String(currentValue);
       }
       const indentSize = depth * spacesCount;
-      const currentIndent = replacer.repeat(indentSize); // signSpace
-      const bracketIndent = replacer.repeat(indentSize - spacesCount);
+      const currentIndent = space.repeat(indentSize);
+      const bracketIndent = space.repeat(indentSize - spacesCount);
 
       const arrayValue = Object.entries(currentValue);
       const lines = arrayValue.map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`);
-      const result = [
-        '{',
-        ...lines,
-        `${bracketIndent}}`,
-      ].join('\n');
+      const result = ['{', ...lines, bracketIndent, '}'].join('\n');
 
       return result;
     };
@@ -65,38 +58,48 @@ export default (filepath1, filepath2) => {
     return iter(value, 1);
   };
 
-  const signes = {
-    plus: '+',
-    minus: '-',
-    nothing: ' ',
-  }
+  const buildReturn = (object1, object2) => {
+    const tempObject = getInfoDiff(object1, object2);
+    const space = '  ';
+    const signes = {
+      plus: '+',
+      minus: '-',
+      emptySpace: ' ',
+    };
 
-  const genDiff = (obj1, obj2) => {
-    const infoDiff = getInfoDiff(obj1, obj2); // result
+    const iter = (tree, depth) => {
+      const result = tree.map((item) => {
+        const currentSpace = space.repeat(depth);
+        const typeDiff = item.type;
+        const { value } = item;
+        const { key } = item;
 
-    const getResult = infoDiff.map((diff) => {
-      const typeDiff = diff.type;
+        const value1 = object1[key];
+        const value2 = object2[key];
 
-      switch (typeDiff) {
-        case 'added':
-          return { key: diff.value };
-        case 'deleted':
-          return { key: diff.value };
-        case 'changed':
-          return (
-            { key: diff.value1 },
-            { key: diff.value2 });
-        case 'unchanged':
-          return { key: diff.value };
-        default:
-          return null;
-      }
-    });
+        switch (typeDiff) {
+          case 'added':
+            return `${currentSpace}${signes.plus} ${key}: ${stringify(value, depth)}`;
+          case 'deleted':
+            return `${currentSpace}${signes.minus} ${key}: ${stringify(value, depth)}`;
+          case 'changed':
+            return [
+              `${currentSpace}${signes.minus} ${key}: ${stringify(value1, depth)}`,
+              `${currentSpace}${signes.plus} ${key}: ${stringify(value2, depth)}`,
+            ].join('\n');
+          case 'unchanged':
+            return `${currentSpace}${signes.emptySpace} ${key}: ${stringify(value, depth)}`;
+          default:
+            return null;
+        }
+      });
 
-    return getResult;
+      return result;
+    };
+    const result = iter(tempObject, 1);
+
+    return ['{', ...result, '}'].join('\n');
   };
 
-  // console.log('---ТИП', typeof genDiff(data1, data2, keys));
-  console.log('>>> RESULT', genDiff(data1, data2));
-  return genDiff(data1, data2);
+  return buildReturn(data1, data2);
 };
