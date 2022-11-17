@@ -6,4 +6,4 @@
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b9ef39d04bc8f5341ea4/test_coverage)](https://codeclimate.com/github/elen-oz/frontend-project-46/test_coverage)
 
-[![asciicast](https://asciinema.org/a/Mx1bnoqxmxuVTYRM4N026zv6m.svg)](https://asciinema.org/a/Mx1bnoqxmxuVTYRM4N026zv6m)
+[![asciicast](https://asciinema.org/a/wEbyKZLIJlC9YBNzQZwwAuFuI.svg)](https://asciinema.org/a/wEbyKZLIJlC9YBNzQZwwAuFuI)
