@@ -1,14 +1,4 @@
 #!/usr/bin/env node
-import { readFileSync } from 'node:fs';
-
-// const fileData1 = readFileSync('./data/file1.json', 'utf8');
-// console.log(fileData1);
-// const fileData2 = readFileSync('./data/file2.json', 'utf8');
-// console.log(fileData2);
-
-// console.log(typeof (fileData1));
-// console.log(typeof (fileData2));
-
 const primitives = {
   string: 'value',
   boolean: true,
@@ -46,17 +36,6 @@ const cases = [
   ['...', undefined, 5],
 ];
 
-const test = [
-  { follow: false, type: 'deleted' },
-  { host: 'hexlet.io', type: 'unchanged' },
-  { proxy: '123.234.53.22', type: 'deleted' },
-  [
-    { timeout: 50, type: 'changed' },
-    { timeout: 20, type: 'changed' }
-  ],
-  { verbose: true, type: 'added' }
-];
-
 const stringify = (value, replacer = ' ', spacesCount = 1) => {
   const iter = (currentValue, depth) => {
     if (typeof currentValue !== 'object' || currentValue === null) {
@@ -67,9 +46,7 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
     const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
     const arrayValue = Object.entries(currentValue);
-    console.log('--- arrayValue: ', arrayValue);
     const lines = arrayValue.map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`);
-    console.log('=== lines: ', lines);
     const result = [
       '{',
       ...lines,
@@ -77,17 +54,18 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
     ].join('\n');
 
     return result;
+    // return [...result].join('');
   };
 
   return iter(value, 1);
 };
 
-// primitives, nested, cases
+stringify(primitives);
+stringify(nested);
+stringify(cases);
 
 // console.log('primitives: ', stringify(primitives));
 // console.log('--------------');
-// console.log('nested: ', stringify(nested));
+console.log('nested: ', stringify(nested));
 // console.log('=================');
 // console.log('cases: ', stringify(cases));
-// console.log('///');
-console.log('test: ', stringify(test));
