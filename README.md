@@ -2,7 +2,7 @@
 
 [![Actions Status](https://github.com/elen-oz/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/elen-oz/frontend-project-46/actions)
 
-[![Actions](https://github.com/elen-oz/frontend-project-46/workflows/github-actions.yml/badge.svg)](https://github.com/elen-oz/frontend-project-46/actions)
+![Actions](https://github.com/elen-oz/frontend-project-46/workflows/github-actions.yml/badge.svg)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/b9ef39d04bc8f5341ea4/maintainability)](https://codeclimate.com/github/elen-oz/frontend-project-46/maintainability)
 
