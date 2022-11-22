@@ -4,22 +4,11 @@ import fs from 'fs';
 import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
-import yaml from 'js-yaml';
+import parser from './parsers.js';
 
 const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
 const readFile = (file) => fs.readFileSync(getAbsolutePath(file), 'utf-8');
 const getFormat = (file) => path.extname(file).slice(1);
-
-const parser = (fileContent, fileFormat) => {
-  switch (fileFormat) {
-    case 'json':
-      return JSON.parse(fileContent);
-    case 'yml':
-      return yaml.load(fileContent);
-    default:
-      return 'error';
-  }
-};
 
 const genDiff = (filepath1, filepath2) => {
   const fileData1 = readFile(filepath1);
