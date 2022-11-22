@@ -5,14 +5,14 @@ import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
 
-export default (filepath1, filepath2) => {
-  const fileFullPath1 = path.resolve(cwd(), filepath1).trim();
-  const fileFullPath2 = path.resolve(cwd(), filepath2).trim();
+const genDiff = (filepath1, filepath2) => {
+  const fileFullPath1 = path.resolve(cwd(), filepath1).trim(); // создается путь
+  const fileFullPath2 = path.resolve(cwd(), filepath2).trim(); // из текущ-й дир-ии в абсолютный
 
-  const fileData1 = readFileSync(fileFullPath1, 'utf8');
+  const fileData1 = readFileSync(fileFullPath1, 'utf8'); // читает файл
   const fileData2 = readFileSync(fileFullPath2, 'utf8');
 
-  const data1 = JSON.parse(fileData1);
+  const data1 = JSON.parse(fileData1); // преобразует текст в соотв тип данных
   const data2 = JSON.parse(fileData2);
 
   const getInfoDiff = (obj1, obj2) => {
@@ -103,3 +103,5 @@ export default (filepath1, filepath2) => {
 
   return buildReturn(data1, data2);
 };
+
+export default genDiff;

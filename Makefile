@@ -16,3 +16,6 @@ lint-fix:
 
 test-coverage:
 	npm test -- --coverage
+
+test:
+	jest --watch
