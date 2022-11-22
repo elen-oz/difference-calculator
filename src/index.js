@@ -4,15 +4,32 @@ import fs from 'fs';
 import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
+import yaml from 'js-yaml';
 
 const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
+const readFile = (file) => fs.readFileSync(getAbsolutePath(file), 'utf-8');
+const getFormat = (file) => path.extname(file).slice(1);
+
+const parser = (fileContent, fileFormat) => {
+  switch (fileFormat) {
+    case 'json':
+      return JSON.parse(fileContent);
+    case 'yml':
+      return yaml.load(fileContent);
+    default:
+      return 'error';
+  }
+};
 
 const genDiff = (filepath1, filepath2) => {
-  const fileData1 = fs.readFileSync(getAbsolutePath(filepath1), 'utf8');
-  const fileData2 = fs.readFileSync(getAbsolutePath(filepath2), 'utf8');
+  const fileData1 = readFile(filepath1);
+  const fileData2 = readFile(filepath2);
 
-  const data1 = JSON.parse(fileData1); // преобразует текст в соотв тип данных
-  const data2 = JSON.parse(fileData2);
+  const formatFile1 = getFormat(filepath1); // .json
+  const formatFile2 = getFormat(filepath2); // .yml
+
+  const data1 = parser(fileData1, formatFile1);
+  const data2 = parser(fileData2, formatFile2);
 
   const getInfoDiff = (obj1, obj2) => {
     const keys1 = _.keys(data1);
