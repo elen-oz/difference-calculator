@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* eslint-disable no-restricted-syntax */
-import { readFileSync } from 'node:fs';
+import fs from 'fs';
 import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
@@ -8,8 +8,8 @@ import _ from 'lodash';
 const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
 
 const genDiff = (filepath1, filepath2) => {
-  const fileData1 = readFileSync(getAbsolutePath(filepath1), 'utf8'); // читает файл
-  const fileData2 = readFileSync(getAbsolutePath(filepath2), 'utf8');
+  const fileData1 = fs.readFileSync(getAbsolutePath(filepath1), 'utf8');
+  const fileData2 = fs.readFileSync(getAbsolutePath(filepath2), 'utf8');
 
   const data1 = JSON.parse(fileData1); // преобразует текст в соотв тип данных
   const data2 = JSON.parse(fileData2);
