@@ -5,12 +5,11 @@ import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
 
-const genDiff = (filepath1, filepath2) => {
-  const fileFullPath1 = path.resolve(cwd(), filepath1).trim(); // создается путь
-  const fileFullPath2 = path.resolve(cwd(), filepath2).trim(); // из текущ-й дир-ии в абсолютный
+const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
 
-  const fileData1 = readFileSync(fileFullPath1, 'utf8'); // читает файл
-  const fileData2 = readFileSync(fileFullPath2, 'utf8');
+const genDiff = (filepath1, filepath2) => {
+  const fileData1 = readFileSync(getAbsolutePath(filepath1), 'utf8'); // читает файл
+  const fileData2 = readFileSync(getAbsolutePath(filepath2), 'utf8');
 
   const data1 = JSON.parse(fileData1); // преобразует текст в соотв тип данных
   const data2 = JSON.parse(fileData2);
@@ -49,7 +48,9 @@ const genDiff = (filepath1, filepath2) => {
       const bracketIndent = space.repeat(indentSize - spacesCount);
 
       const arrayValue = Object.entries(currentValue);
-      const lines = arrayValue.map(([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`);
+      const lines = arrayValue.map(
+        ([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`
+      );
       const result = ['{', ...lines, bracketIndent, '}'].join('\n');
 
       return result;
@@ -79,16 +80,31 @@ const genDiff = (filepath1, filepath2) => {
 
         switch (typeDiff) {
           case 'added':
-            return `${currentSpace}${signes.plus} ${key}: ${stringify(value, depth)}`;
+            return `${currentSpace}${signes.plus} ${key}: ${stringify(
+              value,
+              depth
+            )}`;
           case 'deleted':
-            return `${currentSpace}${signes.minus} ${key}: ${stringify(value, depth)}`;
+            return `${currentSpace}${signes.minus} ${key}: ${stringify(
+              value,
+              depth
+            )}`;
           case 'changed':
             return [
-              `${currentSpace}${signes.minus} ${key}: ${stringify(value1, depth)}`,
-              `${currentSpace}${signes.plus} ${key}: ${stringify(value2, depth)}`,
+              `${currentSpace}${signes.minus} ${key}: ${stringify(
+                value1,
+                depth
+              )}`,
+              `${currentSpace}${signes.plus} ${key}: ${stringify(
+                value2,
+                depth
+              )}`,
             ].join('\n');
           case 'unchanged':
-            return `${currentSpace}${signes.emptySpace} ${key}: ${stringify(value, depth)}`;
+            return `${currentSpace}${signes.emptySpace} ${key}: ${stringify(
+              value,
+              depth
+            )}`;
           default:
             return null;
         }
