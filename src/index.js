@@ -49,7 +49,7 @@ const genDiff = (filepath1, filepath2) => {
 
       const arrayValue = Object.entries(currentValue);
       const lines = arrayValue.map(
-        ([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`
+        ([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`,
       );
       const result = ['{', ...lines, bracketIndent, '}'].join('\n');
 
@@ -82,28 +82,28 @@ const genDiff = (filepath1, filepath2) => {
           case 'added':
             return `${currentSpace}${signes.plus} ${key}: ${stringify(
               value,
-              depth
+              depth,
             )}`;
           case 'deleted':
             return `${currentSpace}${signes.minus} ${key}: ${stringify(
               value,
-              depth
+              depth,
             )}`;
           case 'changed':
             return [
               `${currentSpace}${signes.minus} ${key}: ${stringify(
                 value1,
-                depth
+                depth,
               )}`,
               `${currentSpace}${signes.plus} ${key}: ${stringify(
                 value2,
-                depth
+                depth,
               )}`,
             ].join('\n');
           case 'unchanged':
             return `${currentSpace}${signes.emptySpace} ${key}: ${stringify(
               value,
-              depth
+              depth,
             )}`;
           default:
             return null;
