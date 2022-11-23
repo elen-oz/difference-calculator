@@ -8,17 +8,17 @@ import parser from './parsers.js';
 
 const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
 const readFile = (file) => fs.readFileSync(getAbsolutePath(file), 'utf-8');
-const getFormat = (file) => path.extname(file).slice(1);
+const getFormat = (file) => path.extname(file);
 
 const genDiff = (filepath1, filepath2) => {
   const fileData1 = readFile(filepath1);
   const fileData2 = readFile(filepath2);
 
-  const formatFile1 = getFormat(filepath1); // .json
-  const formatFile2 = getFormat(filepath2); // .yml
+  const fileFormat1 = getFormat(filepath1);
+  const fileFormat2 = getFormat(filepath2);
 
-  const data1 = parser(fileData1, formatFile1);
-  const data2 = parser(fileData2, formatFile2);
+  const data1 = parser(fileData1, fileFormat1);
+  const data2 = parser(fileData2, fileFormat2);
 
   const getInfoDiff = (obj1, obj2) => {
     const keys1 = _.keys(data1);
