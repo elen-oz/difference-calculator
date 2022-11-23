@@ -33,6 +33,25 @@ const genDiff = (filepath1, filepath2) => {
         return { key, type: 'object', value: getInfoDiff(value1, value2) };
       }
 
+      // TypeError: Cannot read properties of undefined (reading 'key5')
+      // eslint-disable-next-line max-len
+      // if ((_.isPlainObject(value1) && !_.isPlainObject(value2)) || (!_.isPlainObject(value1) && _.isPlainObject(value2))) {
+      //   return { key, type: 'innerObject', value: getInfoDiff(value1, value2) };
+      // }
+
+      // TypeError: Cannot read properties of undefined (reading 'key5')
+      // if (_.isPlainObject(value1) || _.isPlainObject(value2)) {
+      //   return { key, type: 'innerObject', value: getInfoDiff(value1, value2) };
+      // }
+
+      // TypeError: tree.map is not a function
+      // if (_.isPlainObject(value1)) {
+      //   return { key, type: 'innerObject', value: value1 };
+      // }
+      // if (_.isPlainObject(value2)) {
+      //   return { key, type: 'innerObject', value: value2 };
+      // }
+
       if (_.isEqual(value1, value2)) {
         return {
           key,
@@ -46,7 +65,6 @@ const genDiff = (filepath1, filepath2) => {
       if (!_.has(obj2, key)) {
         return { key, type: 'deleted', value: value1 };
       }
-      console.log(`getInfoDiff: key:${key}, value1:${value1}/value2:${value2}`);
       return {
         key,
         type: 'changed',
@@ -58,20 +76,18 @@ const genDiff = (filepath1, filepath2) => {
   };
 
   const stringify = (value, spacesCount, space) => {
-    // const space = ' ';
     const iter = (currentValue, depth) => {
       if (typeof currentValue !== 'object' || currentValue === null) {
         return String(currentValue);
       }
       const indentSize = depth * spacesCount;
       const currentIndent = space.repeat(indentSize);
-      const bracketIndent = space.repeat(indentSize - spacesCount);
 
       const arrayValue = Object.entries(currentValue);
       const lines = arrayValue.map(
         ([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`,
       );
-      const result = ['{', ...lines, bracketIndent, '}'].join('\n');
+      const result = ['{', ...lines, `${currentIndent}}`].join('\n');
 
       return result;
     };
@@ -81,7 +97,7 @@ const genDiff = (filepath1, filepath2) => {
 
   const buildReturn = (object1, object2) => {
     const tempObject = getInfoDiff(object1, object2);
-    const space = '  ';
+    const space = '    ';
     const signes = {
       plus: '+',
       minus: '-',
@@ -96,11 +112,14 @@ const genDiff = (filepath1, filepath2) => {
         const { value } = item;
         const { key } = item;
 
-        const value1 = object1[key];
-        const value2 = object2[key];
-
         switch (typeDiff) {
           case 'object':
+            return `${currentSpace}${key}: ${[
+              '{',
+              ...iter(value, depth + 1),
+              `${currentSpace}}`,
+            ].join('\n')}`;
+          case 'innerObject':
             return `${currentSpace}${key}: ${[
               '{',
               ...iter(value, depth + 1),
@@ -119,9 +138,6 @@ const genDiff = (filepath1, filepath2) => {
               space,
             )}`;
           case 'changed':
-            console.log('---------------------------------------------------');
-            console.log(`buildReturn: key:${key}, value1:${item.value1}/value2:${item.value2}`);
-
             return [
               `${signSpace}${signes.minus} ${key}: ${stringify(
                 item.value1,
@@ -135,9 +151,11 @@ const genDiff = (filepath1, filepath2) => {
               )}`,
             ].join('\n');
           case 'unchanged':
-            return `${signSpace}${
-              signes.emptySpace
-            } ${key}: ${stringify(value, depth, space)}`;
+            return `${signSpace}${signes.emptySpace} ${key}: ${stringify(
+              value,
+              depth,
+              space,
+            )}`;
           default:
             return 'error';
         }
@@ -146,7 +164,6 @@ const genDiff = (filepath1, filepath2) => {
       return result;
     };
     const result = iter(tempObject, 1);
-
     return ['{', ...result, '}'].join('\n');
   };
 

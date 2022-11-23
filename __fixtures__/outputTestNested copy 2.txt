@@ -1,0 +1,44 @@
+{
+    common: {
+      + follow: false // added
+        setting1: Value 1 // unchanged
+      - setting2: 200
+      - setting3: true // changed
+      + setting3: null // changed
+      + setting4: blah blah // added
+      + setting5: {
+        key5: value5 ==== +4 пробела впереди
+        } // added
+        setting6: {
+            doge: {
+              - wow:  // changed
+              + wow: so much // changed
+            } // object
+            key: value // unchanged
+          + ops: vops // added
+        } // object
+    } // object
+    group1: {
+      - baz: bas // changed
+      + baz: bars // changed
+        foo: bar // unchanged
+      - nest: {
+        key: value ==== +4 пробела впереди
+        } // changed
+      + nest: str // changed
+    } // object
+  - group2: {
+    abc: 12345 ==== +4 пробела впереди
+    deep: { ==== +4 пробела впереди
+        id: 45 ==== +4 пробела впереди
+        }
+    }
+  + group3: {
+    deep: { ==== +4 пробела впереди
+        id: { ==== +4 пробела впереди
+            number: 45 ==== +4 пробела впереди
+            }
+        }
+    fee: 100500 ==== +4 пробела впереди
+    } // added
+}
