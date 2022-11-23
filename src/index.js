@@ -21,30 +21,44 @@ const genDiff = (filepath1, filepath2) => {
   const data2 = parser(fileData2, fileFormat2);
 
   const getInfoDiff = (obj1, obj2) => {
-    const keys1 = _.keys(data1);
-    const keys2 = _.keys(data2);
+    const keys1 = _.keys(obj1);
+    const keys2 = _.keys(obj2);
     const sortedKeys = _.sortBy(_.union(keys1, keys2));
 
     const result = sortedKeys.map((key) => {
       const value1 = obj1[key];
       const value2 = obj2[key];
 
+      if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
+        return { key, type: 'object', value: getInfoDiff(value1, value2) };
+      }
+
+      if (_.isEqual(value1, value2)) {
+        return {
+          key,
+          type: 'unchanged',
+          value: value1,
+        };
+      }
       if (!_.has(obj1, key)) {
         return { key, type: 'added', value: value2 };
       }
       if (!_.has(obj2, key)) {
         return { key, type: 'deleted', value: value1 };
       }
-      if (obj1[key] !== obj2[key]) {
-        return { key, type: 'changed', value: getInfoDiff(value1, value2) };
-      }
-      return { key, type: 'unchanged', value: value1 };
+      console.log(`getInfoDiff: key:${key}, value1:${value1}/value2:${value2}`);
+      return {
+        key,
+        type: 'changed',
+        value1,
+        value2,
+      };
     });
     return result;
   };
 
-  const stringify = (value, spacesCount) => {
-    const space = ' ';
+  const stringify = (value, spacesCount, space) => {
+    // const space = ' ';
     const iter = (currentValue, depth) => {
       if (typeof currentValue !== 'object' || currentValue === null) {
         return String(currentValue);
@@ -77,6 +91,7 @@ const genDiff = (filepath1, filepath2) => {
     const iter = (tree, depth) => {
       const result = tree.map((item) => {
         const currentSpace = space.repeat(depth);
+        const signSpace = currentSpace.slice(2);
         const typeDiff = item.type;
         const { value } = item;
         const { key } = item;
@@ -85,34 +100,46 @@ const genDiff = (filepath1, filepath2) => {
         const value2 = object2[key];
 
         switch (typeDiff) {
+          case 'object':
+            return `${currentSpace}${key}: ${[
+              '{',
+              ...iter(value, depth + 1),
+              `${currentSpace}}`,
+            ].join('\n')}`;
           case 'added':
-            return `${currentSpace}${signes.plus} ${key}: ${stringify(
+            return `${signSpace}${signes.plus} ${key}: ${stringify(
               value,
               depth,
+              space,
             )}`;
           case 'deleted':
-            return `${currentSpace}${signes.minus} ${key}: ${stringify(
+            return `${signSpace}${signes.minus} ${key}: ${stringify(
               value,
               depth,
+              space,
             )}`;
           case 'changed':
+            console.log('---------------------------------------------------');
+            console.log(`buildReturn: key:${key}, value1:${item.value1}/value2:${item.value2}`);
+
             return [
-              `${currentSpace}${signes.minus} ${key}: ${stringify(
-                value1,
+              `${signSpace}${signes.minus} ${key}: ${stringify(
+                item.value1,
                 depth,
+                space,
               )}`,
-              `${currentSpace}${signes.plus} ${key}: ${stringify(
-                value2,
+              `${signSpace}${signes.plus} ${key}: ${stringify(
+                item.value2,
                 depth,
+                space,
               )}`,
             ].join('\n');
           case 'unchanged':
-            return `${currentSpace}${signes.emptySpace} ${key}: ${stringify(
-              value,
-              depth,
-            )}`;
+            return `${signSpace}${
+              signes.emptySpace
+            } ${key}: ${stringify(value, depth, space)}`;
           default:
-            return null;
+            return 'error';
         }
       });
 
@@ -127,3 +154,5 @@ const genDiff = (filepath1, filepath2) => {
 };
 
 export default genDiff;
+
+// gendiff __fixtures__/file1.json __fixtures__/file2.json
