@@ -11,8 +11,8 @@ program
   .helpOption('-h, --help', 'display help for command')
   .option('-f, --format <type>', 'output format')
   .arguments('<filepath1> <filepath2>')
-  .action((filepath1, filepath2) => {
-    console.log(genDiff(filepath1, filepath2));
+  .action((filepath1, filepath2, formatName) => {
+    console.log(genDiff(filepath1, filepath2, formatName));
   });
 
 program.parse(process.argv);

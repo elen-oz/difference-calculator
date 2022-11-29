@@ -5,13 +5,13 @@ import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
 import parser from './parsers.js';
-import formatter from './formatters/getFormat.js';
+import formatter from './formatters/index.js';
 
 const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
 const readFile = (file) => fs.readFileSync(getAbsolutePath(file), 'utf-8');
 const getFormat = (file) => path.extname(file);
 
-const genDiff = (filepath1, filepath2) => {
+const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
   const fileData1 = readFile(filepath1);
   const fileData2 = readFile(filepath2);
 
@@ -55,7 +55,7 @@ const genDiff = (filepath1, filepath2) => {
     });
   };
 
-  return formatter(buildTree(data1, data2));
+  return formatter(buildTree(data1, data2), formatName);
 };
 
 export default genDiff;

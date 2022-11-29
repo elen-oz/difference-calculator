@@ -3,6 +3,14 @@ const indent = (depth, spacesCount = 2) => {
   return space.repeat(spacesCount * depth);
 };
 
+const signIndent = (depth, spacesCount = 2) => {
+  const space = '  ';
+  const tempSign = space.repeat(spacesCount * depth);
+  const signSpace = tempSign.slice(2);
+
+  return signSpace;
+};
+
 const stringify = (value, treeDepth) => {
   if (typeof value !== 'object' || value === null) {
     return String(value);
@@ -17,15 +25,7 @@ const stringify = (value, treeDepth) => {
   return builTree;
 };
 
-const signIndent = (depth, spacesCount = 2) => {
-  const space = '  ';
-  const tempSign = space.repeat(spacesCount * depth);
-  const signSpace = tempSign.slice(2);
-
-  return signSpace;
-};
-
-const buildReturn = (innerTree) => {
+export default (innerTree) => {
   const signes = {
     add: '+',
     deduct: '-',
@@ -55,5 +55,3 @@ const buildReturn = (innerTree) => {
 
   return `{\n${iter(innerTree, 1).join('')}}`;
 };
-
-export default buildReturn;
