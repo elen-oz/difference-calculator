@@ -54,6 +54,11 @@ const genDiff = (filepath1, filepath2) => {
     });
   };
 
+  const indent = (depth, spacesCount = 2) => {
+    const space = '  ';
+    return space.repeat(spacesCount * depth);
+  };
+
   const stringify = (value, treeDepth) => {
     if (typeof value !== 'object' || value === null) {
       return String(value);
@@ -68,31 +73,15 @@ const genDiff = (filepath1, filepath2) => {
     return builTree;
   };
 
-  const indent = (depth, spacesCount = 2) => {
-    const space = '  ';
-    // console.log(`--- INDENT: _${space.repeat(spacesCount * depth)}_`);
-    // console.log('--- spacesCount:', spacesCount);
-    // console.log('--- depth:', depth);
-    return space.repeat(spacesCount * depth); // (number)
-  };
-
   const signIndent = (depth, spacesCount = 2) => {
     const space = '  ';
-    const tempSign = space.repeat(spacesCount * depth); // (number)
+    const tempSign = space.repeat(spacesCount * depth);
     const signSpace = tempSign.slice(2);
-    // console.log(`=== signINDENT: _${space.repeat(signSpace)}_`);
-
-    // console.log(`=== spacesCount: _${spacesCount}_`);
-    // console.log(`=== depth: _${depth}_`);
-
-    // console.log(`=== tempSign: _${tempSign}_`);
-    // console.log(`=== signSpace: _${signSpace}_`);
 
     return signSpace;
   };
   // =====> stylish ___________________________________
   const buildReturn = (innerTree) => {
-    // const tempObject = getInfoDiff(object1, object2);
     const signes = {
       add: '+',
       deduct: '-',
@@ -100,8 +89,6 @@ const genDiff = (filepath1, filepath2) => {
     };
 
     const iter = (tree, depth) => tree.map((item) => {
-      // const currentSpace = space.repeat(depth);
-      // const signSpace = currentSpace.slice(2);
       const typeDiff = item.type;
 
       const getValue = (valuee, sign) => `${signIndent(depth)}${sign} ${item.key}: ${stringify(valuee, depth)}\n`;
@@ -121,8 +108,7 @@ const genDiff = (filepath1, filepath2) => {
           return `Error: This type does not exist: ${item.type}`;
       }
     });
-    // const builTree = iter(tempObject, 1);
-    // return ['{', ...builTree, '}'].join('\n');
+
     return `{\n${iter(innerTree, 1).join('')}}`;
   };
 
@@ -130,5 +116,3 @@ const genDiff = (filepath1, filepath2) => {
 };
 
 export default genDiff;
-
-// gendiff __fixtures__/file1.json __fixtures__/file2.json
