@@ -1,3 +1,4 @@
 export default (innerTree) => {
-  return innerTree;
+  const result = innerTree;
+  return result;
 };
