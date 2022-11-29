@@ -20,154 +20,113 @@ const genDiff = (filepath1, filepath2) => {
   const data1 = parser(fileData1, fileFormat1);
   const data2 = parser(fileData2, fileFormat2);
 
-  const getInfoDiff = (obj1, obj2) => {
+  const buildTree = (obj1, obj2) => {
     const keys1 = _.keys(obj1);
     const keys2 = _.keys(obj2);
     const sortedKeys = _.sortBy(_.union(keys1, keys2));
 
-    const result = sortedKeys.map((key) => {
+    return sortedKeys.map((key) => {
       const value1 = obj1[key];
       const value2 = obj2[key];
 
       if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
-        return { key, type: 'object', value: getInfoDiff(value1, value2) };
+        return { key, type: 'object', children: buildTree(value1, value2) };
       }
-
-      // TypeError: Cannot read properties of undefined (reading 'key5')
-      // eslint-disable-next-line max-len
-      // if ((_.isPlainObject(value1) && !_.isPlainObject(value2)) || (!_.isPlainObject(value1) && _.isPlainObject(value2))) {
-      //   return { key, type: 'innerObject', value: getInfoDiff(value1, value2) };
-      // }
-
-      // TypeError: Cannot read properties of undefined (reading 'key5')
-      // if (_.isPlainObject(value1) || _.isPlainObject(value2)) {
-      //   return { key, type: 'innerObject', value: getInfoDiff(value1, value2) };
-      // }
-
-      // TypeError: tree.map is not a function
-      // if (_.isPlainObject(value1)) {
-      //   return { key, type: 'innerObject', value: value1 };
-      // }
-      // if (_.isPlainObject(value2)) {
-      //   return { key, type: 'innerObject', value: value2 };
-      // }
-
       if (_.isEqual(value1, value2)) {
         return {
           key,
           type: 'unchanged',
-          value: value1,
+          val: value1,
         };
       }
       if (!_.has(obj1, key)) {
-        return { key, type: 'added', value: value2 };
+        return { key, type: 'added', val: value2 };
       }
       if (!_.has(obj2, key)) {
-        return { key, type: 'deleted', value: value1 };
+        return { key, type: 'deleted', val: value1 };
       }
       return {
         key,
         type: 'changed',
-        value1,
-        value2,
+        val1: value1,
+        val2: value2,
       };
     });
-    return result;
   };
 
-  const stringify = (value, spacesCount, space) => {
-    const iter = (currentValue, depth) => {
-      if (typeof currentValue !== 'object' || currentValue === null) {
-        return String(currentValue);
-      }
-      const indentSize = depth * spacesCount;
-      const currentIndent = space.repeat(indentSize);
+  const stringify = (value, treeDepth) => {
+    if (typeof value !== 'object' || value === null) {
+      return String(value);
+    }
 
-      const arrayValue = Object.entries(currentValue);
-      const lines = arrayValue.map(
-        ([key, val]) => `${currentIndent}${key}: ${iter(val, depth + 1)}`,
-      );
-      const result = ['{', ...lines, `${currentIndent}}`].join('\n');
+    const arrayValue = Object.entries(value);
+    const lines = arrayValue.map(
+      ([key, val]) => `${indent(treeDepth + 1)}${key}: ${stringify(val, treeDepth + 1)}`,
+    );
+    const builTree = ['{', ...lines, `${indent(treeDepth)}}`].join('\n');
 
-      return result;
-    };
-
-    return iter(value, 1);
+    return builTree;
   };
 
-  const buildReturn = (object1, object2) => {
-    const tempObject = getInfoDiff(object1, object2);
-    const space = '    ';
+  const indent = (depth, spacesCount = 2) => {
+    const space = '  ';
+    // console.log(`--- INDENT: _${space.repeat(spacesCount * depth)}_`);
+    // console.log('--- spacesCount:', spacesCount);
+    // console.log('--- depth:', depth);
+    return space.repeat(spacesCount * depth); // (number)
+  };
+
+  const signIndent = (depth, spacesCount = 2) => {
+    const space = '  ';
+    const tempSign = space.repeat(spacesCount * depth); // (number)
+    const signSpace = tempSign.slice(2);
+    // console.log(`=== signINDENT: _${space.repeat(signSpace)}_`);
+
+    // console.log(`=== spacesCount: _${spacesCount}_`);
+    // console.log(`=== depth: _${depth}_`);
+
+    // console.log(`=== tempSign: _${tempSign}_`);
+    // console.log(`=== signSpace: _${signSpace}_`);
+
+    return signSpace;
+  };
+  // =====> stylish ___________________________________
+  const buildReturn = (innerTree) => {
+    // const tempObject = getInfoDiff(object1, object2);
     const signes = {
-      plus: '+',
-      minus: '-',
+      add: '+',
+      deduct: '-',
       emptySpace: ' ',
     };
 
-    const iter = (tree, depth) => {
-      const result = tree.map((item) => {
-        const currentSpace = space.repeat(depth);
-        const signSpace = currentSpace.slice(2);
-        const typeDiff = item.type;
-        const { value } = item;
-        const { key } = item;
+    const iter = (tree, depth) => tree.map((item) => {
+      // const currentSpace = space.repeat(depth);
+      // const signSpace = currentSpace.slice(2);
+      const typeDiff = item.type;
 
-        switch (typeDiff) {
-          case 'object':
-            return `${currentSpace}${key}: ${[
-              '{',
-              ...iter(value, depth + 1),
-              `${currentSpace}}`,
-            ].join('\n')}`;
-          case 'innerObject':
-            return `${currentSpace}${key}: ${[
-              '{',
-              ...iter(value, depth + 1),
-              `${currentSpace}}`,
-            ].join('\n')}`;
-          case 'added':
-            return `${signSpace}${signes.plus} ${key}: ${stringify(
-              value,
-              depth,
-              space,
-            )}`;
-          case 'deleted':
-            return `${signSpace}${signes.minus} ${key}: ${stringify(
-              value,
-              depth,
-              space,
-            )}`;
-          case 'changed':
-            return [
-              `${signSpace}${signes.minus} ${key}: ${stringify(
-                item.value1,
-                depth,
-                space,
-              )}`,
-              `${signSpace}${signes.plus} ${key}: ${stringify(
-                item.value2,
-                depth,
-                space,
-              )}`,
-            ].join('\n');
-          case 'unchanged':
-            return `${signSpace}${signes.emptySpace} ${key}: ${stringify(
-              value,
-              depth,
-              space,
-            )}`;
-          default:
-            return 'error';
-        }
-      });
-
-      return result;
-    };
-    const result = iter(tempObject, 1);
-    return ['{', ...result, '}'].join('\n');
+      const getValue = (valuee, sign) => `${signIndent(depth)}${sign} ${item.key}: ${stringify(valuee, depth)}\n`;
+      switch (typeDiff) {
+        case 'object':
+          // eslint-disable-next-line max-len
+          return `${indent(depth)}${item.key}: {\n${iter(item.children, depth + 1).join('')}${indent(depth)}}\n`;
+        case 'added':
+          return getValue(item.val, signes.add);
+        case 'deleted':
+          return getValue(item.val, signes.deduct);
+        case 'unchanged':
+          return getValue(item.val, signes.emptySpace);
+        case 'changed':
+          return `${getValue(item.val1, signes.deduct)}${getValue(item.val2, signes.add)}`;
+        default:
+          return `Error: This type does not exist: ${item.type}`;
+      }
+    });
+    // const builTree = iter(tempObject, 1);
+    // return ['{', ...builTree, '}'].join('\n');
+    return `{\n${iter(innerTree, 1).join('')}}`;
   };
 
-  return buildReturn(data1, data2);
+  return buildReturn(buildTree(data1, data2));
 };
 
 export default genDiff;
