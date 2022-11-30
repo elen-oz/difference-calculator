@@ -7,7 +7,7 @@ import parser from './parsers.js';
 import getDifference from './getDifference.js';
 import formatter from './formatters/index.js';
 
-const getAbsolutePath = (filePath) => path.resolve(process.cwd(), '__fixtures__', filePath).trim();
+const getAbsolutePath = (filePath) => path.resolve(process.cwd(), filePath).trim();
 const readFile = (filePath) => fs.readFileSync(getAbsolutePath(filePath), 'utf-8');
 const getFormat = (fileName) => path.extname(fileName);
 // const getFormat = (fileName) => fileName.split('.')[1];
