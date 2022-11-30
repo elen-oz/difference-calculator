@@ -15,13 +15,25 @@ const fileJSON1 = getFixturePath('file1.json');
 const fileJSON2 = getFixturePath('file2.json');
 const fileYML1 = getFixturePath('file1.yml');
 const fileYML2 = getFixturePath('file2.yml');
-// const expectedResultPlane = readFile('outputTestPlane.txt', 'utf8').trim();
-const expectedResultNested = readFile('outputTestNested.txt', 'utf8').trim();
 
-test('check genDiff JSON', () => {
+const expectedResultNested = readFile(
+  'expectedTest_stylish.txt',
+  'utf8',
+).trim();
+const expectedResultPlain = readFile('expectedTest_plain.txt', 'utf8').trim();
+
+test('check genDiff JSON -- stylish', () => {
   expect(genDiff(fileJSON1, fileJSON2)).toEqual(expectedResultNested);
 });
 
-test('check genDiff YML', () => {
+test('check genDiff YML -- stylish', () => {
   expect(genDiff(fileYML1, fileYML2)).toEqual(expectedResultNested);
+});
+
+test('check genDiff JSON -- plain', () => {
+  expect(genDiff(fileJSON1, fileJSON2)).toEqual(expectedResultPlain);
+});
+
+test('check genDiff YML -- plain', () => {
+  expect(genDiff(fileYML1, fileYML2)).toEqual(expectedResultPlain);
 });
