@@ -11,7 +11,7 @@ const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
 const readFile = (file) => fs.readFileSync(getAbsolutePath(file), 'utf-8');
 const getFormat = (file) => path.extname(file);
 
-const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
+const genDiff = (filepath1, filepath2, formatName) => {
   const fileData1 = readFile(filepath1);
   const fileData2 = readFile(filepath2);
 
@@ -21,8 +21,7 @@ const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
   const data1 = parser(fileData1, fileFormat1);
   const data2 = parser(fileData2, fileFormat2);
 
-  // console.log('format:', formatName);
-  // console.log('JSON format:', JSON.stringify(formatName));
+  // console.log('--- format:', formatName);
 
   return formatter(getDifference(data1, data2), formatName);
 };

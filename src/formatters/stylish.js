@@ -49,7 +49,7 @@ export default (innerTree) => {
       case 'changed':
         return `${getValue(item.val1, signes.deduct)}${getValue(item.val2, signes.add)}`;
       default:
-        return `Error: This type does not exist: ${item.type}`;
+        return `Error: Unknown type: ${item.type}`;
     }
   });
 
