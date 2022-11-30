@@ -16,5 +16,3 @@ program
   });
 
 program.parse(process.argv);
-
-// console.log('DONE!');

@@ -10,7 +10,6 @@ import formatter from './formatters/index.js';
 const getAbsolutePath = (filePath) => path.resolve(process.cwd(), filePath).trim();
 const readFile = (filePath) => fs.readFileSync(getAbsolutePath(filePath), 'utf-8');
 const getFormat = (fileName) => path.extname(fileName);
-// const getFormat = (fileName) => fileName.split('.')[1];
 
 const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
   const fileData1 = readFile(filepath1);
@@ -21,8 +20,6 @@ const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
 
   const data1 = parser(fileData1, fileFormat1);
   const data2 = parser(fileData2, fileFormat2);
-
-  // console.log('--- format:', formatName);
 
   return formatter(getDifference(data1, data2), formatName);
 };
