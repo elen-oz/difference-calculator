@@ -1,8 +1,5 @@
-#!/usr/bin/env node
-/* eslint-disable no-restricted-syntax */
 import fs from 'fs';
 import path from 'path';
-// import { cwd } from 'process';
 import parser from './parsers.js';
 import getDifference from './getDifference.js';
 import formatter from './formatters/index.js';
