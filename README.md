@@ -13,18 +13,22 @@
 Difference Calculator is a program that determines the difference between two data structures.
 
 
-### Compare flat .json files (example of the 3rd step):
+### Compare flat .json files with *plain* structure (example of the 3rd step):
 
-[![asciicast](https://asciinema.org/a/wEbyKZLIJlC9YBNzQZwwAuFuI.svg)](https://asciinema.org/a/wEbyKZLIJlC9YBNzQZwwAuFuI)
+[![asciicast](https://asciinema.org/a/J8cwMLH4ZAqlcgBl8iuj4KTu2.svg)](https://asciinema.org/a/J8cwMLH4ZAqlcgBl8iuj4KTu2)
 
-### Compare flat .yaml files (example of the 5th step):
+### Compare flat .yaml files with *plain* structure (example of the 5th step):
 
-[![asciicast](https://asciinema.org/a/ZrIEv64fEbsmRft2kItoH1IRt.svg)](https://asciinema.org/a/ZrIEv64fEbsmRft2kItoH1IRt)
+[![asciicast](https://asciinema.org/a/7tedpbPc53ce9LI2hAfnwTVtw.svg)](https://asciinema.org/a/7tedpbPc53ce9LI2hAfnwTVtw)
 
-### Compare .json files with default STYLYSH format (example of the 6th step):
+### Compare .json files with *nested* structure and with default STYLYSH format (example of the 6th step):
 
-[![asciicast](https://asciinema.org/a/GHSZ69tAHY1mv0VhTQesiCtuK.svg)](https://asciinema.org/a/GHSZ69tAHY1mv0VhTQesiCtuK)
+[![asciicast](https://asciinema.org/a/7LGo78sWJ3SbUNhIbRKUhFTHa.svg)](https://asciinema.org/a/7LGo78sWJ3SbUNhIbRKUhFTHa)
 
-### Compare files with PLAIN format (example of the 7th step):
+### Compare files with *nested* structure and with PLAIN format (example of the 7th step):
 
-[![asciicast](https://asciinema.org/a/Uwm1UFdNDcdoY8U68h2ueJv3U.svg)](https://asciinema.org/a/Uwm1UFdNDcdoY8U68h2ueJv3U)
+[![asciicast](https://asciinema.org/a/MOBzQvErcrSbFSsEJUg6atBXS.svg)](https://asciinema.org/a/MOBzQvErcrSbFSsEJUg6atBXS)
+
+### Compare files with *nested* structure and with JSON format (example of the 8th step):
+
+[![asciicast](https://asciinema.org/a/jvo4rAGQspApEl8I2ULZrYY2J.svg)](https://asciinema.org/a/jvo4rAGQspApEl8I2ULZrYY2J)
