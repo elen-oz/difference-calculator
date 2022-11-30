@@ -1,19 +1,12 @@
 import _ from 'lodash';
 
 const stringify = (value) => {
-  let result;
   if (_.isObject(value)) {
-    result = '[complex value]';
-    console.log('Должно быть: [complex value]', result);
-    return result;
+    return '[complex value]';
   } if (typeof value === 'string') {
-    result = `'${value}'`;
-    console.log('Должно быть: $ {value}', result);
-    return result;
+    return `'${value}'`;
   }
-  result = String(value);
-  console.log('Должно быть: String(value)', result);
-  return result;
+  return String(value);
 };
 
 export default (data) => {

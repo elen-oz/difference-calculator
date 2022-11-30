@@ -2,16 +2,17 @@
 /* eslint-disable no-restricted-syntax */
 import fs from 'fs';
 import path from 'path';
-import { cwd } from 'process';
+// import { cwd } from 'process';
 import parser from './parsers.js';
 import getDifference from './getDifference.js';
 import formatter from './formatters/index.js';
 
-const getAbsolutePath = (file) => path.resolve(cwd(), file).trim();
-const readFile = (file) => fs.readFileSync(getAbsolutePath(file), 'utf-8');
-const getFormat = (file) => path.extname(file);
+const getAbsolutePath = (filePath) => path.resolve(process.cwd(), '__fixtures__', filePath).trim();
+const readFile = (filePath) => fs.readFileSync(getAbsolutePath(filePath), 'utf-8');
+const getFormat = (fileName) => path.extname(fileName);
+// const getFormat = (fileName) => fileName.split('.')[1];
 
-const genDiff = (filepath1, filepath2, formatName) => {
+const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
   const fileData1 = readFile(filepath1);
   const fileData2 = readFile(filepath2);
 
