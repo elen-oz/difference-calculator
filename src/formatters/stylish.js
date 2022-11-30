@@ -1,15 +1,11 @@
-const indent = (depth, spacesCount = 2) => {
-  const space = '  ';
-  return space.repeat(spacesCount * depth);
-};
+// const indent = (depth, spacesCount = 2) => {
+//   const space = '  ';
+//   return space.repeat(spacesCount * depth);
+// };
 
-const signIndent = (depth, spacesCount = 2) => {
-  const space = '  ';
-  const tempSign = space.repeat(spacesCount * depth);
-  const signSpace = tempSign.slice(2);
+const indent = (depth, spacesCount = 2) => '  '.repeat(spacesCount * depth);
 
-  return signSpace;
-};
+const signIndent = (depth, spacesCount = 2) => '  '.repeat(spacesCount * depth).slice(2);
 
 const stringify = (value, treeDepth) => {
   if (typeof value !== 'object' || value === null) {
@@ -20,9 +16,8 @@ const stringify = (value, treeDepth) => {
   const lines = arrayValue.map(
     ([key, val]) => `${indent(treeDepth + 1)}${key}: ${stringify(val, treeDepth + 1)}`,
   );
-  const builTree = ['{', ...lines, `${indent(treeDepth)}}`].join('\n');
 
-  return builTree;
+  return ['{', ...lines, `${indent(treeDepth)}}`].join('\n');
 };
 
 export default (innerTree) => {
@@ -35,11 +30,16 @@ export default (innerTree) => {
   const iter = (tree, depth) => tree.map((item) => {
     const typeDiff = item.type;
 
-    const getValue = (valuee, sign) => `${signIndent(depth)}${sign} ${item.key}: ${stringify(valuee, depth)}\n`;
+    const getValue = (valuee, sign) => `${signIndent(depth)}${sign} ${item.key}: ${stringify(
+      valuee,
+      depth,
+    )}\n`;
     switch (typeDiff) {
       case 'object':
-        // eslint-disable-next-line max-len
-        return `${indent(depth)}${item.key}: {\n${iter(item.children, depth + 1).join('')}${indent(depth)}}\n`;
+        return `${indent(depth)}${item.key}: {\n${iter(
+          item.children,
+          depth + 1,
+        ).join('')}${indent(depth)}}\n`;
       case 'added':
         return getValue(item.val, signes.add);
       case 'deleted':
@@ -47,7 +47,10 @@ export default (innerTree) => {
       case 'unchanged':
         return getValue(item.val, signes.emptySpace);
       case 'changed':
-        return `${getValue(item.val1, signes.deduct)}${getValue(item.val2, signes.add)}`;
+        return `${getValue(item.val1, signes.deduct)}${getValue(
+          item.val2,
+          signes.add,
+        )}`;
       default:
         return `Error: Unknown type: ${item.type}`;
     }
