@@ -1,5 +1,4 @@
 name: linter & jest
-run-name: ${{ github.actor }} is testing out Project 2 🚀
 # Trigger the workflow on push or pull request
 on:
   - push
