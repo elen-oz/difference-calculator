@@ -39,18 +39,10 @@ jobs:
         # Run Linter
         run: make lint
       - name: Run test & publish code coverage
-        uses: paambaati/codeclimate-action@v2.6.0
+        uses: paambaati/codeclimate-action@v3.0.0
         # Add Code Climate secret key
         env:
           CC_TEST_REPORTER_ID: d022ed21df2bb4727526adf26337b732d1f44609f7f54e112c3b3db5bd3b08eb
         with:
           coverageCommand: make test-coverage
           debug: true
-      
-#       - name: Test & publish code coverage
-#         uses: paambaati/codeclimate-action@v3.0.0
-#         env:
-#           CC_TEST_REPORTER_ID: ${{ secrets.HEXLET_ID }}
-#         with:
-#           coverageCommand: make test-coverage
-#           debug: true
