@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { test, expect } from '@jest/globals';
+import { test, expect, describe } from '@jest/globals';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
@@ -12,16 +12,19 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
 const tests = [
-  ['file1.json', 'file2.json', 'stylish', 'expectedTestResult_stylish.txt'],
-  ['file1.yml', 'file2.yml', 'stylish', 'expectedTestResult_stylish.txt'],
-  ['file1.json', 'file2.json', 'plain', 'expectedTestResult_plain.txt'],
-  ['file1.json', 'file2.json', 'json', 'expectedTestResult_json.txt'],
+  ['file1.json', 'file2.json', 'expectedResult_stylish.txt'],
+  ['file1.json', 'file2.json', 'expectedResult_stylish.txt', 'stylish'],
+  ['file1.yml', 'file2.yml', 'expectedResult_stylish.txt', 'stylish'],
+  ['file1.json', 'file2.json', 'expectedResult_plain.txt', 'plain'],
+  ['file1.json', 'file2.json', 'expectedResult_json.txt', 'json'],
 ];
 
-test.each(tests)('Compare data', (data1, data2, format, expectedResult) => {
+describe.each(tests)('Compare data', (data1, data2, expectedResult, format) => {
   const firstData = getFixturePath(data1);
   const secondData = getFixturePath(data2);
   const finalResult = genDiff(firstData, secondData, format);
   const expectedOutcome = readFile(expectedResult);
-  expect(finalResult).toEqual(expectedOutcome);
+  test(`test ${data1} and ${data2} with ${format} format to ${expectedResult}`, () => {
+    expect(finalResult).toEqual(expectedOutcome);
+  });
 });
